@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ums.UserException;
+import com.ums.constant.UserConstant;
 import com.ums.entity.UserCart;
 import com.ums.model.UserStatus;
 import com.ums.service.UserService;
@@ -43,7 +44,7 @@ public class UserController {
 		responseEntity=new ResponseEntity(users,HttpStatus.CREATED);
 		}else {
 			UserStatus userStatus = new UserStatus();
-			userStatus.setCode("400");
+			userStatus.setCode(UserConstant.code_four_zero);
 			userStatus.setMessage("please provide user data correctly");
 			userStatus.setType("Bad request");
 			responseEntity = new ResponseEntity<>(userStatus, HttpStatus.BAD_REQUEST);
@@ -60,7 +61,7 @@ public class UserController {
 			List<UserCart> userCarts = userRepository.findAll();
 			if (userCarts == null || userCarts.isEmpty()) {
 				UserStatus userStatus = new UserStatus();
-				userStatus.setCode("400");
+				userStatus.setCode(UserConstant.code_four_zero);
 				userStatus.setMessage("there is no data present in the database for usercarts");
 				userStatus.setType("Bad request");
 				responseEntity = new ResponseEntity<>(userStatus, HttpStatus.BAD_REQUEST);
