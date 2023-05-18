@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ums.UserException;
 import com.ums.entity.UserCart;
+import com.ums.model.UserStatus;
+import com.ums.service.UserService;
 
 @RestController
 @RequestMapping("/user")
@@ -28,24 +31,76 @@ public class UserController {
 	@Qualifier("userRepository")
 	private UserRepository userRepository;
 
+	@Autowired
+	private UserService userService;
+
 	@PostMapping("/user")
-	public UserCart saveUser(@RequestBody UserCart user) {
-		return userRepository.save(user);
+	public ResponseEntity<?> saveUser(@RequestBody UserCart user) {
+		UserCart users=null;
+		ResponseEntity<?> responseEntity = null;
+		if(user.getUname()!=null && user.getUpassword()!=null) {
+		users= userRepository.save(user);
+		responseEntity=new ResponseEntity(users,HttpStatus.CREATED);
+		}else {
+			UserStatus userStatus = new UserStatus();
+			userStatus.setCode("400");
+			userStatus.setMessage("please provide user data correctly");
+			userStatus.setType("Bad request");
+			responseEntity = new ResponseEntity<>(userStatus, HttpStatus.BAD_REQUEST);
+		}
+		 return responseEntity;
 	}
 
 	@GetMapping
-	public List<UserCart> getAllUsers() {
-		return userRepository.findAll();
+	public ResponseEntity<?> getAllUsers() {
+
+		ResponseEntity<?> responseEntity = null;
+
+		try {
+			List<UserCart> userCarts = userRepository.findAll();
+			if (userCarts == null || userCarts.isEmpty()) {
+				UserStatus userStatus = new UserStatus();
+				userStatus.setCode("400");
+				userStatus.setMessage("there is no data present in the database for usercarts");
+				userStatus.setType("Bad request");
+				responseEntity = new ResponseEntity<>(userStatus, HttpStatus.BAD_REQUEST);
+				return responseEntity;
+			}
+			responseEntity = new ResponseEntity(userCarts, HttpStatus.OK);
+		} catch (Exception e) {
+			UserStatus userStatus = new UserStatus();
+			userStatus.setCode("500");
+			userStatus.setMessage(e.getMessage());
+			userStatus.setType("Internal ServerError");
+			responseEntity = new ResponseEntity<>(userStatus, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return responseEntity;
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getById(@PathVariable Integer id) {
-		 Optional<UserCart> user= userRepository.findById(id);
-		 if(user.isPresent()) {
-			 return new ResponseEntity<>(user,HttpStatus.OK);
-		 }else  {
-		return new ResponseEntity<>("user is not found with id: "+id,HttpStatus.NOT_ACCEPTABLE);
-		 }
+
+		ResponseEntity<?> responseEntity = null;
+		Optional<UserCart> user;
+		if (id != 0) {
+			try {
+				user = userService.getById(id);
+				responseEntity = new ResponseEntity<>(user, HttpStatus.OK);
+			} catch (UserException e) {
+				UserStatus userStatus = new UserStatus();
+				userStatus.setCode("400");
+				userStatus.setMessage(e.getMessage());
+				userStatus.setType("Bad request");
+				responseEntity = new ResponseEntity<>(userStatus, HttpStatus.BAD_REQUEST);
+
+			}
+		} else {
+			responseEntity = new ResponseEntity("the id is zero cannot be accepted send valid id" + id,
+					HttpStatus.BAD_REQUEST);
+		}
+
+		return responseEntity;
 	}
 
 	@DeleteMapping("/{id}")
