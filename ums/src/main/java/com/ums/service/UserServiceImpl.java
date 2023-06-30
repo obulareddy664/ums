@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ums.UserException;
-import com.ums.controller.UserRepository;
 import com.ums.entity.UserCart;
+import com.ums.repository.UserRepository;
 
 @Service
 public class UserServiceImpl  implements UserService{
