@@ -44,8 +44,8 @@ public class UserController {
 	private UserService userService;
 	
 	
-	@Autowired
-	UserConfig userConfig;
+//	@Autowired
+//	UserConfig userConfig;
 
 
 	@PostMapping("/user")
@@ -136,8 +136,8 @@ public class UserController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@GetMapping("/profile")
-	public String getActiveProfileName() {
-		return userConfig.getMessage();
-	}
+//	@GetMapping("/profile")
+//	public String getActiveProfileName() {
+//		return userConfig.getMessage();
+//	}
 }
