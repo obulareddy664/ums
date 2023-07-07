@@ -14,11 +14,11 @@ import com.ums.UserException;
 import com.ums.entity.UserCart;
 import com.ums.repository.UserRepository;
 import com.ums.service.UserService;
-//surendra
+//UserControllerTest, surendra
 @SpringBootTest
  class UserControllerTest {
 
-	
+	//UserRepository
 	@Mock
 	private UserRepository userRepository;
 	
