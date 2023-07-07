@@ -18,7 +18,7 @@ import com.ums.service.UserService;
 @SpringBootTest
  class UserControllerTest {
 
-	
+	//UserRepository
 	@Mock
 	private UserRepository userRepository;
 	
