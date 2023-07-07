@@ -28,7 +28,7 @@ import com.ums.service.UserService;
 	@InjectMocks
 	private UserController userController;
 
-	//saveUser
+	//testSaveUser
 	@Test
 	 void testSaveUser() {
 		
